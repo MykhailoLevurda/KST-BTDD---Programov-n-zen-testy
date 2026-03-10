@@ -1,6 +1,7 @@
 package cz.kst.btdd.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cz.kst.btdd.ToolRentalApplication;
 import cz.kst.btdd.api.dto.CreateReservationRequest;
 import cz.kst.btdd.domain.UserRole;
 import cz.kst.btdd.persistence.EntityTool;
@@ -27,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Integrační testy: vrstvy controller – service – DB v realistickém prostředí (Spring context, H2).
  */
-@SpringBootTest
+@SpringBootTest(classes = ToolRentalApplication.class)
 @AutoConfigureMockMvc
 @Transactional
 @DisplayName("Rental API integrace")

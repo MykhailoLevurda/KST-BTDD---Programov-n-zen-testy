@@ -33,6 +33,60 @@ Repozitář: **https://github.com/MykhailoLevurda/KST-BTDD---Programov-n-zen-tes
 
 ---
 
+## Máš už 10 commitů a chceš doplnit na 20?
+
+Pokud máš historii jako: *feat(persistence): JPA entities* → … → *docs: README…* (10 commitů) a **chybí ti prvních 10** (docs požadavků, POM, doména, testy domény, OverlapChecker), udělej toto:
+
+1. V kořeni projektu vytvoř novou větev „bez historie“, ale se všemi soubory:
+   ```powershell
+   git checkout --orphan temp main
+   git rm -r --cached .
+   ```
+   (`git rm -r --cached .` odstraní všechny soubory z indexu, na disku zůstanou. Na větvi `temp` zatím není žádný commit, takže `git reset HEAD .` by selhal.)
+2. Teď máš **všechny soubory v pracovní složce**, ale **žádný commit** a **nic není připraveno ke commitu**. Přidej a commitni **všech 20 kroků** od Commitu 1 do Commitu 20 (viz sekce níže). Nevynechávej žádný krok.
+3. Až budeš mít 20 commitů na větvi `temp`, přepni zpět na `main` a nahraď ji:
+   ```powershell
+   git branch -D main
+   git branch -m main
+   ```
+4. Nahraj novou historii na GitHub (přepíše se vzdálená větev):
+   ```powershell
+   git push --force origin main
+   ```
+
+---
+
+## Jak správně udělat 20 commitů (aby se zobrazovalo všech 20)
+
+**Princip:** Jeden commit = **jeden** blok `git add` + **jeden** `git commit`. Celkem 20 takových bloků za sebou.
+
+1. **Běž na větvi `temp`** (po `checkout --orphan temp main` a `git rm -r --cached -f .`). V té chvíli máš 0 commitů.
+
+2. **Pro každý z 20 kroků níže:**
+   - zkopíruj a spusť **nejdřív** příkaz `git add ...` (přidají se jen vybrané soubory),
+   - hned potom spusť **jediný** `git commit -m "..."`.
+   - Tím vznikne **jeden** nový commit. Po 1. kroku máš 1 commit, po 2. máš 2 commity, … po 20. máš 20 commitů.
+
+3. **Nevynechávej žádný krok** a **nepřidávej do jednoho commitu víc souborů**, než je v návodu – jinak by se ti „slily“ dva kroky do jednoho a skončíš s méně než 20 commity.
+
+4. **Kontrola:** Po každých pěti commitech můžeš spustit:
+   ```powershell
+   git log --oneline
+   ```
+   Po 5. commitu uvidíš 5 řádků, po 10. commitu 10 řádků, po 20. commitu **20 řádků**. To znamená, že máš všech 20 commitů.
+
+5. **Na konci** (až budeš mít všech 20): přejmenuj větev na `main`, smaž starou `main`, pushni:
+   ```powershell
+   git branch -D main
+   git branch -m main
+   git log --oneline
+   git push --force origin main
+   ```
+
+**Proč dřív bylo jen 10?** Protože prvních 10 commitů (docs, POM, doména, testy domény) se nikdy neudělalo – buď se začalo až od „JPA entities“, nebo se několik kroků slilo do jednoho. Teď musíš projít **všech 20** kroků od Commitu 1 do Commitu 20.
+
+---
+
 ## 20 commitů – přesně v tomto pořadí
 
 Příkazy jsou pro **PowerShell** v kořeni projektu. Cesty jsou relativní ke kořeni repozitáře.

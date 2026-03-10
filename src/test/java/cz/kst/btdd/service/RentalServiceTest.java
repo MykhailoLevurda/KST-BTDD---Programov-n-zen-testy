@@ -139,7 +139,7 @@ class RentalServiceTest {
 
             assertThatThrownBy(() -> rentalService.activate(100L, 1L))
                     .isInstanceOf(BusinessException.class)
-                    .hasMessageContaining("zaměstnanec");
+                    .hasMessageContaining("admin");
         }
     }
 

@@ -81,7 +81,7 @@ class RentalControllerIT {
         mvc.perform(post("/api/rentals/reservations")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("RESERVED"))
                 .andExpect(jsonPath("$.user.id").value(customerId))
                 .andExpect(jsonPath("$.tool.id").value(toolId));

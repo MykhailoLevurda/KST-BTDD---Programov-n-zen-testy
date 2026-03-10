@@ -23,7 +23,7 @@ class RentalPriceCalculationTest {
         LocalDate start = LocalDate.of(2025, 3, 1);
         LocalDate end = LocalDate.of(2025, 3, 5);   // 4 dny
         BigDecimal price = RentalPriceCalculator.calculate(DAILY_RATE, LATE_FEE_PER_DAY, start, end, end);
-        assertThat(price).isEqualByComparingTo("0"); // 4 * 100
+        assertThat(price).isEqualByComparingTo("400"); // 4 * 100
     }
 
     @Test

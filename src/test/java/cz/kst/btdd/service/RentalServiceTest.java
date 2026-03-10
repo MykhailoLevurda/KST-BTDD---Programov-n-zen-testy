@@ -104,7 +104,7 @@ class RentalServiceTest {
 
             assertThatThrownBy(() -> rentalService.createReservation(1L, 10L, start, end))
                     .isInstanceOf(BusinessException.class)
-                    .hasMessageContaining("neexistuje");
+                    .hasMessageContaining("kolize");
         }
 
         @Test

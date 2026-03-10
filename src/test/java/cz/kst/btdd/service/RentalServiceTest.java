@@ -203,7 +203,7 @@ class RentalServiceTest {
 
             assertThatThrownBy(() -> rentalService.cancelReservation(100L, 999L))
                     .isInstanceOf(BusinessException.class)
-                    .hasMessageContaining("vlastní");
+                    .hasMessageContaining("cizi");
         }
     }
 

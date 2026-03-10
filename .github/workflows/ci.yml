@@ -20,11 +20,14 @@ jobs:
           cache: maven
 
       - name: Build and run tests
+        id: build
         run: mvn -B verify
 
       - name: Publish JaCoCo report as artifact
+        if: always() && (steps.build.outcome == 'success' || steps.build.outcome == 'failure')
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
           path: target/site/jacoco/
           retention-days: 30
+          if-no-files-found: ignore

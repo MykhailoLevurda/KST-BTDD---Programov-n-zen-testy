@@ -21,7 +21,7 @@ jobs:
 
       - name: Build and run tests
         id: build
-        run: mvn -B verify
+        run: mvn -B verify -Pci
 
       - name: Publish JaCoCo report as artifact
         if: always() && (steps.build.outcome == 'success' || steps.build.outcome == 'failure')

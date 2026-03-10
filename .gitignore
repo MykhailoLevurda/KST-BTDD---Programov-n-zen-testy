@@ -1,0 +1,19 @@
+# Build
+target/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Maven wrapper jar (generated)
+.mvn/wrapper/*.jar
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

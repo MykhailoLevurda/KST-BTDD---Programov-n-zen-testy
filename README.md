@@ -13,6 +13,7 @@ Aplikace slouží k **správě rezervací a půjček nářadí**. Uživatelé (z
 Detailní popis domény a pravidel je v [docs/DOMENA-A-MODEL.md](docs/DOMENA-A-MODEL.md). Přehled požadavků semestrální práce v [docs/POZADAVKY.md](docs/POZADAVKY.md).
 
 ## Jak projekt spustit lokálně
+(Odkaz na repo: https://github.com/MykhailoLevurda/KST-BTDD---Programov-n-zen-testy.git )
 
 ### Požadavky
 

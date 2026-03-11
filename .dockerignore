@@ -1,0 +1,26 @@
+# Maven – vynechat výstup sestavení (budeme sestavovat v kontejneru)
+target/
+!.mvn/wrapper/maven-wrapper.jar
+pom.xml.tag
+*.log
+# pom.xml a src/ NEvynechávat – jsou potřeba pro build
+
+# Git
+.git
+.gitignore
+
+# IDE
+.idea
+*.iml
+.vscode
+*.swp
+*.swo
+
+# Docs a ostatní (do image nepotřebujeme)
+docs/
+*.md
+!README.md
+
+# Testy a lokální konfigurace
+.env
+.env.*

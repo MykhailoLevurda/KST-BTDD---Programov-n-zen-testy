@@ -73,7 +73,7 @@ Pipeline (GitHub Actions) při push/PR na `main`/`master`:
 3. **Statická analýza** – SpotBugs běží v rámci `mvn verify` a generuje report.
 4. **Code coverage** – JaCoCo report se nahraje jako **artefakt** `jacoco-report` (složka `target/site/jacoco/`), retention 30 dní.
 5. **Docker image** – z `Dockerfile` se sestaví image `tool-rental` a pushne se do GitHub Container Registry (GHCR).
-6. **CD do stagingu (Kubernetes)** – po úspěšném buildu a pushi image job `deploy-staging` provede `kubectl apply` manifestů v `k8s/` do namespace `staging` (využívá kubeconfig uložený v GitHub Secret `KUBE_CONFIG_STAGING`).
+6. **CD do stagingu (Kubernetes)** – po úspěšném buildu a pushi image job `deploy-staging` provede `kubectl apply` manifestů v `k8s/` do namespace `staging` (využívá kubeconfig v GitHub Secret `KUBE_CONFIG_STAGING`). Job se spustí jen pokud je tento secret nastaven; lokální cluster (docker-desktop) z GitHub runneru není dostupný, proto lze secret nechat prázdný a staging nasazovat ručně – workflow tím nepadá.
 
 Workflow: [.github/workflows/ci.yml](.github/workflows/ci.yml).
 

@@ -47,7 +47,10 @@ jobs:
   deploy-staging:
     needs: build-and-test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    # Běží jen na main a jen když je nastaven kubeconfig (cluster dostupný z internetu).
+    # Lokální docker-desktop z GitHub runneru nedosáhneš – pak job přeskoč nebo nech spadnout s continue-on-error.
+    if: github.ref == 'refs/heads/main' && secrets.KUBE_CONFIG_STAGING != ''
+    continue-on-error: true
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4

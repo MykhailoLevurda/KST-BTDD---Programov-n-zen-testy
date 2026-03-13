@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tool-rental
+  labels:
+    app: tool-rental
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tool-rental
+  template:
+    metadata:
+      labels:
+        app: tool-rental
+    spec:
+      containers:
+        - name: tool-rental
+          # TODO: nahraď <ghcr-owner> za lowercase hodnotu GHCR_NAME (tvé GitHub username)
+          image: ghcr.io/mykhailolevurda/tool-rental:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: tool-rental-config
+            - secretRef:
+                name: tool-rental-secret
+          readinessProbe:
+            httpGet:
+              path: /api/users
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/users
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"

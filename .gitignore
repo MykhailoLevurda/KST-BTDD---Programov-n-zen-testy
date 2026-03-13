@@ -17,3 +17,6 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Docker / lokální konfigurace (hesla)
+.env

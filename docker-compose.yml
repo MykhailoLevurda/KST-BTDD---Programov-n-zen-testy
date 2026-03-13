@@ -1,0 +1,42 @@
+# Docker Compose: aplikace + PostgreSQL (lokální vývoj / demo)
+# Před prvním spuštěním zkopíruj .env.example na .env a nastav POSTGRES_PASSWORD.
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: tool-rental-db
+    environment:
+      POSTGRES_DB: rental
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d rental"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+    image: tool-rental:latest
+    container_name: tool-rental-app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/rental
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_DATASOURCE_USERNAME: app
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
+      SPRING_JPA_DEFER_DATASOURCE_INITIALIZATION: "true"
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_SQL_INIT_MODE: always
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:

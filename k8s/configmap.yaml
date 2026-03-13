@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tool-rental-config
+data:
+  # JDBC URL do PostgreSQL v clusteru nebo mimo něj.
+  # Např. pokud máš v K8s službu "tool-rental-db" na portu 5432:
+  # jdbc:postgresql://tool-rental-db:5432/rental
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://tool-rental-db:5432/rental"
+
+  SPRING_DATASOURCE_USERNAME: "app"
+
+  # Přepnutí driveru z H2 (default v application.yml) na PostgreSQL.
+  SPRING_DATASOURCE_DRIVER_CLASS_NAME: "org.postgresql.Driver"
+
+  # Schéma si v K8s typicky vytváříš/udržuješ sám – ponecháme update.
+  SPRING_JPA_HIBERNATE_DDL_AUTO: "update"
+
+  SPRING_JPA_DEFER_DATASOURCE_INITIALIZATION: "true"
+  SPRING_SQL_INIT_MODE: "always"
+
+  # Volitelné, ale pomůže vyhnout se varování ohledně Dialect.
+  SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: "org.hibernate.dialect.PostgreSQLDialect"
+

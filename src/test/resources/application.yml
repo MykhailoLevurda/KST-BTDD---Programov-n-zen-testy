@@ -4,3 +4,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+  sql:
+    init:
+      # V testech nespouštět data.sql – schéma vytvoří Hibernate, data vkládá @BeforeEach v IT.
+      mode: never

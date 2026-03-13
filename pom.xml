@@ -42,6 +42,11 @@
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -130,6 +135,27 @@
                                     </excludes>
                                 </rule>
                             </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Statická analýza (požadavek ZADANI 3.2); běží v phase verify -->
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>4.8.3.0</version>
+                <executions>
+                    <execution>
+                        <id>analyze</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <!-- Pouze vygeneruje SpotBugs report, nepadá buildem na nálezech -->
+                            <goal>spotbugs</goal>
+                        </goals>
+                        <configuration>
+                            <effort>Default</effort>
+                            <threshold>Medium</threshold>
+                            <excludeFilterFile>${project.basedir}/src/main/resources/spotbugs-exclude.xml</excludeFilterFile>
                         </configuration>
                     </execution>
                 </executions>

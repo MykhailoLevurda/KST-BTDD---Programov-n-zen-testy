@@ -33,11 +33,12 @@ jobs:
           if-no-files-found: ignore
 
       - name: Build and push Docker image to GHCR
+        # POZOR: secrets.GHCR_NAME musí být celé malými písmeny (lowercase),
+        # aby název repozitáře v GHCR splňoval pravidla.
         if: steps.build.outcome == 'success'
         env:
-          GHCR_OWNER_LOWER: ${{ toLower(secrets.GHCR_NAME) }}
+          IMAGE_NAME: ghcr.io/${{ secrets.GHCR_NAME }}/tool-rental
         run: |
-          IMAGE_NAME="ghcr.io/${GHCR_OWNER_LOWER}/tool-rental"
           echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_NAME }}" --password-stdin
           docker build -t "$IMAGE_NAME:latest" -t "$IMAGE_NAME:${{ github.sha }}" .
           docker push "$IMAGE_NAME:latest"

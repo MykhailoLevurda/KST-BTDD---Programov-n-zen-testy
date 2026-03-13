@@ -4,7 +4,7 @@ Tento dokument vychází z **ZADANI.md** (DevOps workflow) a ze stávajícího s
 
 ---
 
-Zmeny na zkousku
+Opakovani testu
 
 ## Část A: Co už máme hotové (BTDD + základ CI)
 
@@ -180,4 +180,4 @@ Dockerfile i docker-compose.yml jsou v repozitáři a ověřené. Zbývá jen za
 
 V následujících sekcích můžeš mít podrobné „návody na jeden krok“ (konkrétní příkazy a úryvky YAML), aby bylo jasné, co přesně udělat v IDE a v repozitáři.
 
-Poslední aktualizace: CI má SpotBugs, build a push Docker image do GHCR jsou nastavené a otestované.
+Poslední aktualizace: CI má SpotBugs, build a push Docker image do GHCR jsou nastavené a otestované (image `tool-rental` se publikuje do GHCR po každém push na main).

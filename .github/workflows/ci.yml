@@ -35,8 +35,9 @@ jobs:
       - name: Build and push Docker image to GHCR
         if: steps.build.outcome == 'success'
         env:
-          IMAGE_NAME: ghcr.io/${{ secrets.GHCR_NAME }}/tool-rental
+          GHCR_OWNER_LOWER: ${{ toLower(secrets.GHCR_NAME) }}
         run: |
+          IMAGE_NAME="ghcr.io/${GHCR_OWNER_LOWER}/tool-rental"
           echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.GHCR_NAME }}" --password-stdin
           docker build -t "$IMAGE_NAME:latest" -t "$IMAGE_NAME:${{ github.sha }}" .
           docker push "$IMAGE_NAME:latest"

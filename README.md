@@ -70,9 +70,71 @@ Pipeline (GitHub Actions) při push/PR na `main`/`master`:
 
 1. **Build** – `mvn verify`
 2. **Unit a integrační testy** – součást `mvn verify`
-3. **Code coverage** – JaCoCo report se nahraje jako **artefakt** `jacoco-report` (složka `target/site/jacoco/`), retention 30 dní.
+3. **Statická analýza** – SpotBugs běží v rámci `mvn verify` a generuje report.
+4. **Code coverage** – JaCoCo report se nahraje jako **artefakt** `jacoco-report` (složka `target/site/jacoco/`), retention 30 dní.
+5. **Docker image** – z `Dockerfile` se sestaví image `tool-rental` a pushne se do GitHub Container Registry (GHCR).
+6. **CD do stagingu (Kubernetes)** – po úspěšném buildu a pushi image job `deploy-staging` provede `kubectl apply` manifestů v `k8s/` do namespace `staging` (využívá kubeconfig uložený v GitHub Secret `KUBE_CONFIG_STAGING`).
 
 Workflow: [.github/workflows/ci.yml](.github/workflows/ci.yml).
+
+## Prostředí (local / Docker / Kubernetes)
+
+### Lokální vývoj (H2)
+
+- Spuštění: `mvn spring-boot:run`
+- Databáze: H2 in-memory (`jdbc:h2:mem:rental`), schema i data se vytvářejí z kódu / `data.sql`.
+
+### Docker (PostgreSQL)
+
+- Spuštění: `docker compose up --build`
+- Služby:
+  - `tool-rental-db` – PostgreSQL s DB `rental`, uživatelem `app` a heslem z `.env` (`POSTGRES_PASSWORD`).
+  - `tool-rental-app` – Spring Boot aplikace připojená na Postgres (driver `org.postgresql.Driver`).
+- Po startu je API dostupné na `http://localhost:8080` (viz `docs/POSTMAN-NAVOD.md`).
+
+### Kubernetes – staging (docker-desktop)
+
+- Cluster: Kubernetes z Docker Desktopu (context `docker-desktop`).
+- Namespace: `staging`:
+
+  ```bash
+  kubectl create namespace staging
+  kubectl config set-context --current --namespace=staging
+  ```
+
+- Nasazení komponent:
+
+  ```bash
+  # konfigurace a heslo (Secret – heslo doplnit ručně)
+  kubectl apply -f k8s/configmap.yaml
+  kubectl apply -f k8s/secret-example.yaml
+
+  # PostgreSQL (Deployment + Service tool-rental-db)
+  kubectl apply -f k8s/postgres.yaml
+
+  # aplikace (Deployment + Service tool-rental)
+  kubectl apply -f k8s/deployment.yaml
+  kubectl apply -f k8s/service.yaml
+  ```
+
+- Image aplikace: `ghcr.io/<uživatel>/tool-rental:latest` (publikovaný z CI do GHCR; package je veřejný).
+- Přístup k API (bez Ingress, přes port-forward):
+
+  ```bash
+  kubectl port-forward svc/tool-rental 8080:80
+  ```
+
+  a pak `http://localhost:8080/api/users`.
+
+### Secrets
+
+- **GitHub Actions (CI):**
+  - `GHCR_NAME` – uživatelské jméno na GitHubu (lowercase), použité pro jméno image v GHCR.
+  - `GHCR_TOKEN` – Personal Access Token s právy pro zápis do GitHub Container Registry.
+
+- **Kubernetes (staging):**
+  - `tool-rental-secret` (viz `k8s/secret-example.yaml`) – obsahuje `SPRING_DATASOURCE_PASSWORD` pro Postgres.
+  - **Hesla nejsou v repozitáři** – hodnoty se doplňují ručně před `kubectl apply` nebo přes `kubectl create secret`.
 
 ## Dokumentace
 

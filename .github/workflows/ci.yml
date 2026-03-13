@@ -43,3 +43,27 @@ jobs:
           docker build -t "$IMAGE_NAME:latest" -t "$IMAGE_NAME:${{ github.sha }}" .
           docker push "$IMAGE_NAME:latest"
           docker push "$IMAGE_NAME:${{ github.sha }}"
+
+  deploy-staging:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up kubectl
+        run: |
+          echo "${KUBE_CONFIG}" | base64 -d > kubeconfig
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG_STAGING }}
+
+      - name: Deploy to staging namespace
+        env:
+          KUBECONFIG: ${{ github.workspace }}/kubeconfig
+        run: |
+          kubectl apply -n staging -f k8s/configmap.yaml
+          kubectl apply -n staging -f k8s/secret-example.yaml
+          kubectl apply -n staging -f k8s/postgres.yaml
+          kubectl apply -n staging -f k8s/deployment.yaml
+          kubectl apply -n staging -f k8s/service.yaml
